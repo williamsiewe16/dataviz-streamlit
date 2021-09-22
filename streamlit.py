@@ -21,7 +21,7 @@ def myDecorator(function):
 
 @st.cache
 def load_data(path):
-    df = pd.read_csv(path)[:100]
+    df = pd.read_csv(path)
     return df
 
 
