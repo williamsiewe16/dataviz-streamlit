@@ -6,7 +6,7 @@ import seaborn as sns
 import time
 
 uber_path = "dataset/uber-raw-data-apr14.csv"
-ny_path = "dataset/lab1/ny-trips-data.csv"
+ny_path = "dataset/ny-trips-data.csv"
 
 def myDecorator(function):
     def modified_function(df):
@@ -21,7 +21,7 @@ def myDecorator(function):
 
 @st.cache
 def load_data(path):
-    df = pd.read_csv(path)
+    df = pd.read_csv(path)[:100]
     return df
 
 
@@ -119,7 +119,7 @@ def group_by_wd(df):
     return grp_df
 
 @st.cache(allow_output_mutation=True)
-def grp_heatmap(df):
+def grp_heatmap(grp_df):
     fig, ax= plt.subplots(figsize=(10,6))
     ax = sns.heatmap(grp_df)
     return fig
@@ -230,168 +230,188 @@ def corr_heatmap(df):
     ax = sns.heatmap(df.corr())
     return fig
 
-#Uber-raw-data-apr14 dataset
-st.title("Uber-raw-data-apr14 dataset")
 
-## Load the Data
-st.text(" ")
-st.header("Load the Data")
-df1 = load_data(uber_path)
-if st.checkbox('Show dataframe'):
-    df1
+def Uber_dataset():
+    #Uber-raw-data-apr14 dataset
+    st.title("Uber-raw-data-apr14 dataset")
 
-
-## Perform Data Transformation
-df1_ = df1_data_transformation(df1)
-
-## Visual representation
-
-#
-st.text(" ")
-st.text(" ")
-st.header("Visual representation")
-if st.checkbox("Show graphs"):
+    ## Load the Data
     st.text(" ")
-    st.markdown("`Fréquence par jour du mois`")
-    st.pyplot(frequency_by_dom(df1_))
-
-    #
-    st.text(" ")
-    st.markdown("`Visualisation des points sur une carte`")
-    st.map(map_data(df1_))
-
-    #
-    st.text(" ")
-    st.markdown("`Latitude et longitude moyenne par jour du mois`")
-    plt.gcf().subplots_adjust(wspace = 0.3, hspace = 0.5)
-    st.pyplot(data_by("dom",df1_))
+    st.header("Load the Data")
+    df1 = load_data(uber_path)
+    if st.checkbox('Show dataframe'):
+        df1
 
 
-    #
-    st.text(" ")
-    st.markdown("`Visualisation des données par heure`")
-    st.pyplot(data_by("hours",df1_))
+    ## Perform Data Transformation
+    df1_ = df1_data_transformation(df1)
 
-    #
-    st.text(" ")
-    st.markdown("`Visualisation des données par jour de la semaine`")
-    st.pyplot(data_by("dow",df1_))
-
-    #
-    st.text(" ")
-    st.markdown("`Visualisation des données par jour de la semaine avec les noms des jours en abcisse`")
-    st.pyplot(data_by("dow_xticks",df1_))
-
-
-st.text(" ")
-st.text(" ")
-## Performing Cross Analysis
-st.header("Performing Cross Analysis")
-
-if st.checkbox('Show cross analysis'):
-
-    #
-    grp_df = group_by_wd(df1_)
-
-    #
-    st.text(" ")
-    st.markdown("`Carte de chaleur avec les données groupées`")
-    st.pyplot(grp_heatmap(df1_))
-
-    #
-    st.text(" ")
-    st.markdown("`Histogramme de la latitude et de la longitude`")
-    plt.gcf().subplots_adjust(wspace = 0.3, hspace = 0.5)
-    st.pyplot(lat_lon_hist(df1_))
-
-    #
-    st.text(" ")
-    st.markdown("`Fusions des histogrammes de latitude et de longitude`")
-    st.pyplot(lat_lon_hist(df1_, fusion=True))
-
-    #
-    st.text(" ")
-    st.markdown("`affichage de la latitude des points sur un graphique`")
-    st.pyplot(display_points(df1_.Lat))
-
-    #
-    st.text(" ")
-    st.markdown("`affichage de la longitude des points sur un graphique`")
-    st.pyplot(display_points(df1_.Lon, color="orange"))
-
-
-
-
-#ny-trips-data dataset
-st.text(" ")
-st.text(" ")
-st.title("Ny-trips-data dataset")
-
-## Load the Data
-st.text(" ")
-st.text(" ")
-st.header("Load the Data")
-st.text(" ")
-df2 = load_data(ny_path)
-if st.checkbox('Show dataframe 2'):
-    df2
-
-
-## Perform Data Transformation
-st.text(" ")
-df2_ = df2_data_transformation(df2)
-
-
-## Visual representation
-
-#
-st.text(" ")
-st.text(" ")
-st.header("Visual representation")
-if st.checkbox('Show graphs 2'):
-    st.text(" ")
-    st.text(" ")
-    st.markdown("`Nombre total, moyen de passagers et nombre total de passages par heure de départ`")
-    plt.gcf().subplots_adjust(wspace = 0.3, hspace = 0.5)
-    st.pyplot(passengers_graphs_per_hour(df2_))
+    ## Visual representation
 
     #
     st.text(" ")
     st.text(" ")
-    st.markdown("`Nombre total, moyen de passagers et nombre total de passages par heure de d'arrivée`")
-    plt.gcf().subplots_adjust(wspace = 0.3, hspace = 0.5)
-    st.pyplot(passengers_graphs_per_dropoff_hour(df2_))
+    st.header("Visual representation")
+    if st.checkbox("Show graphs"):
+        st.text(" ")
+        st.markdown("`Fréquence par jour du mois`")
+        st.pyplot(frequency_by_dom(df1_))
+
+        #
+        st.text(" ")
+        st.markdown("`Visualisation des points sur une carte`")
+        st.map(map_data(df1_))
+
+        #
+        st.text(" ")
+        st.markdown("`Latitude et longitude moyenne par jour du mois`")
+        plt.gcf().subplots_adjust(wspace = 0.3, hspace = 0.5)
+        st.pyplot(data_by("dom",df1_))
+
+
+        #
+        st.text(" ")
+        st.markdown("`Visualisation des données par heure`")
+        st.pyplot(data_by("hours",df1_))
+
+        #
+        st.text(" ")
+        st.markdown("`Visualisation des données par jour de la semaine`")
+        st.pyplot(data_by("dow",df1_))
+
+        #
+        st.text(" ")
+        st.markdown("`Visualisation des données par jour de la semaine avec les noms des jours en abcisse`")
+        st.pyplot(data_by("dow_xticks",df1_))
+
+
+    st.text(" ")
+    st.text(" ")
+    ## Performing Cross Analysis
+    st.header("Performing Cross Analysis")
+
+    if st.checkbox('Show cross analysis'):
+
+        #
+        grp_df = group_by_wd(df1_)
+
+        #
+        st.text(" ")
+        st.markdown("`Carte de chaleur avec les données groupées`")
+        st.pyplot(grp_heatmap(grp_df))
+
+        #
+        st.text(" ")
+        st.markdown("`Histogramme de la latitude et de la longitude`")
+        plt.gcf().subplots_adjust(wspace = 0.3, hspace = 0.5)
+        st.pyplot(lat_lon_hist(df1_))
+
+        #
+        st.text(" ")
+        st.markdown("`Fusions des histogrammes de latitude et de longitude`")
+        st.pyplot(lat_lon_hist(df1_, fusion=True))
+
+        #
+        st.text(" ")
+        st.markdown("`affichage de la latitude des points sur un graphique`")
+        st.pyplot(display_points(df1_.Lat))
+
+        #
+        st.text(" ")
+        st.markdown("`affichage de la longitude des points sur un graphique`")
+        st.pyplot(display_points(df1_.Lon, color="orange"))
+
+
+def Ny_dataset():
+    #ny-trips-data dataset
+    st.text(" ")
+    st.text(" ")
+    st.title("Ny-trips-data dataset")
+
+    ## Load the Data
+    st.text(" ")
+    st.text(" ")
+    st.header("Load the Data")
+    st.text(" ")
+    df2 = load_data(ny_path)
+    if st.checkbox('Show dataframe 2'):
+        df2
+
+
+    ## Perform Data Transformation
+    st.text(" ")
+    df2_ = df2_data_transformation(df2)
+
+
+    ## Visual representation
 
     #
     st.text(" ")
     st.text(" ")
-    st.markdown("`Montant total et montant moyen perçu en fonction de l'heure de départ`")
-    plt.gcf().subplots_adjust(wspace = 0.3, hspace = 0.5)
-    st.pyplot(amount_graphs_per_hour(df2_))
+    st.header("Visual representation")
+    if st.checkbox('Show graphs 2'):
+        st.text(" ")
+        st.text(" ")
+        st.markdown("`Nombre total, moyen de passagers et nombre total de passages par heure de départ`")
+        plt.gcf().subplots_adjust(wspace = 0.3, hspace = 0.5)
+        st.pyplot(passengers_graphs_per_hour(df2_))
+
+        #
+        st.text(" ")
+        st.text(" ")
+        st.markdown("`Nombre total, moyen de passagers et nombre total de passages par heure de d'arrivée`")
+        plt.gcf().subplots_adjust(wspace = 0.3, hspace = 0.5)
+        st.pyplot(passengers_graphs_per_dropoff_hour(df2_))
+
+        #
+        st.text(" ")
+        st.text(" ")
+        st.markdown("`Montant total et montant moyen perçu en fonction de l'heure de départ`")
+        plt.gcf().subplots_adjust(wspace = 0.3, hspace = 0.5)
+        st.pyplot(amount_graphs_per_hour(df2_))
+
+        #
+        st.text(" ")
+        st.text(" ")
+        st.markdown("`Distance totale parcourue et distance moyenne en fonction de l'heure de départ`")
+        plt.gcf().subplots_adjust(wspace = 0.3, hspace = 0.5)
+        st.pyplot(distance_graphs_per_hour(df2_))
+
+
+
+
+    ## Performing Cross Analysis
 
     #
     st.text(" ")
     st.text(" ")
-    st.markdown("`Distance totale parcourue et distance moyenne en fonction de l'heure de départ`")
-    plt.gcf().subplots_adjust(wspace = 0.3, hspace = 0.5)
-    st.pyplot(distance_graphs_per_hour(df2_))
+    st.header("Performing Cross Analysis")
+    if st.checkbox('Show cross analysis 2'):
+        st.text(" ")
+        st.markdown("`Carte de chaleur permettant de visualiser la corrélation entre les différentes features`")
+        st.pyplot(corr_heatmap(df2_.corr()))
+
+        #
+        st.text(" ")
+        st.markdown("`Carte de chaleur montrant la corrélation entre le nombre de passagers, la ditance totale, le montant du tarif, du pourboire et le montant total groupés par heure de départ`")
+        grp = df2_[["passenger_count", "hours_pickup", "trip_distance", "fare_amount", "tip_amount", "total_amount"]].groupby("hours_pickup").sum()
+        st.pyplot(corr_heatmap(grp.corr()))
+
+
+def main():
+
+    choice = st.sidebar.selectbox(
+    'Choisissez votre dataset',
+    ('Uber-raw-data-apr14 dataset', 'Ny-trips-data dataset'))
+
+    if choice == 'Uber-raw-data-apr14 dataset':
+        Uber_dataset()
+    else:
+        Ny_dataset()
+    
 
 
 
+    
 
-## Performing Cross Analysis
-
-#
-st.text(" ")
-st.text(" ")
-st.header("Performing Cross Analysis")
-if st.checkbox('Show cross analysis 2'):
-    st.text(" ")
-    st.markdown("`Carte de chaleur permettant de visualiser la corrélation entre les différentes features`")
-    st.pyplot(corr_heatmap(df2_.corr()))
-
-    #
-    st.text(" ")
-    st.markdown("`Carte de chaleur montrant la corrélation entre le nombre de passagers, la ditance totale, le montant du tarif, du pourboire et le montant total groupés par heure de départ`")
-    grp = df2_[["passenger_count", "hours_pickup", "trip_distance", "fare_amount", "tip_amount", "total_amount"]].groupby("hours_pickup").sum()
-    st.pyplot(corr_heatmap(grp.corr()))
+main()
