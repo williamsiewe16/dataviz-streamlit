@@ -13,8 +13,8 @@ def myDecorator(function):
         time_ = time.time()
         res = function(df)
         time_ = time.time()-time_
-        with open(f"{function.__name__}_exec_time.txt","w") as f:
-            f.write(f"{time_}")
+       # with open(f"{function.__name__}_exec_time.txt","w") as f:
+       #     f.write(f"{time_}")
         return res
     return modified_function
 
